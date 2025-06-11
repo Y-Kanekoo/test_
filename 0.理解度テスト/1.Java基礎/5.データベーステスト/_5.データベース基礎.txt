@@ -1,0 +1,76 @@
+〇前提
+CREATE TABLE test_members(
+    id    serial primary key,
+    name    text not null,
+    age       integer,
+    dep_id  integer
+);
+
+〇第1問
+INSERT INTO test_members(name,age,dep_id) VALUES ('山田太郎',62,1);
+INSERT INTO test_members(name,age,dep_id) VALUES ('鈴木一郎',23,1);
+INSERT INTO test_members(name,age,dep_id) VALUES ('佐藤花子',33,2);
+INSERT INTO test_members(name,age,dep_id) VALUES ('遠藤次郎',55,2);
+INSERT INTO test_members(name,age,dep_id) VALUES ('吉田三郎',28,3);
+
+〇第2問
+SELECT
+ *
+FROM
+ test_members
+WHERE
+ dep_id = 2;
+
+〇第3問
+SELECT
+ *
+FROM
+ test_members
+WHERE
+ age < 55
+ORDER BY age DESC;
+
+〇第4問
+UPDATE
+ test_members
+SET
+ name = 'イチロー'
+WHERE
+ id = 2;
+
+UPDATE
+ test_members
+SET
+ age = age + 1;
+
+〇第5問
+DELETE
+FROM
+ test_members
+WHERE
+ age >= 50;
+
+〇ボーナス前提
+CREATE TABLE test_deps(
+    id    serial primary key,
+    name    text not null
+);
+
+INSERT INTO test_deps(name) VALUES('HR事業部');
+INSERT INTO test_deps(name) VALUES('SOL事業部');
+INSERT INTO test_deps(name) VALUES('総務人事部');
+INSERT INTO test_deps(name) VALUES('経営管理室');
+
+〇ボーナス問題
+SELECT
+ m.id
+ ,m.name
+ ,m.age
+ ,d.name as dep_name
+FROM
+ test_members m
+RIGHT OUTER JOIN
+ test_deps d
+ON
+ m.dep_id = d.id
+ORDER BY d.id;
