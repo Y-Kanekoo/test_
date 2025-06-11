@@ -1,0 +1,54 @@
+以下は、歯抜けが２つ続いた場合は対応できませんが、OKとします。
+
+SELECT
+  CASE
+    WHEN
+     NOT EXISTS(select id from items where id = 1)
+    THEN
+     1
+    ELSE
+     MIN(i1.id + 1)
+  END AS absence
+FROM
+  items i1
+LEFT OUTER JOIN
+  items i2
+ON
+ i1.id = i2.id - 1
+WHERE
+ i2.id IS NULL;
+
+
+
+解説
+まずは以下を実行してみると左側にitemsテーブル全部
+右側にidをずらして結合したitemsテーブルが出てくる
+i2.idがnullの部分は歯抜けになっていることがわかる
+ここから正答を導き出す
+SELECT
+ *
+FROM
+ items i1
+LEFT OUTER JOIN
+ items i2
+ON
+ i1.id = i2.id - 1  /*自分の行と次の行を結合→i1.id=1とi2.id=2と結合*/
+
+WHERE
+ i2.id IS NULL
+
+ORDER BY i1.id;
+
+
+以下の部分は
+・id1が抜けていたら問答無用で1を表示
+・それ以外なら(id1が存在していた場合)、i1.idに+1したものを出力する
+という意味
+SELECT
+  CASE
+    WHEN
+     NOT EXISTS(select id from items where id = 1)    THEN
+     1
+    ELSE
+     MIN(i1.id + 1)
+  END AS absence

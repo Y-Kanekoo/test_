@@ -1,0 +1,29 @@
+SELECT
+  pr.name AS prefecture
+  , s.name AS sex
+  , SUM(p.population) AS population
+FROM
+  populations p
+INNER JOIN
+  prefectures pr
+ON
+  p.prefecture_code = pr.code
+INNER JOIN
+  sexes s
+ON
+  p.sex_code = s.code
+INNER JOIN
+  areas a
+ON
+  pr.area_code = a.code
+GROUP BY   
+  pr.code
+  ,s.code
+  ,a.code
+HAVING
+  a.name = '九州'
+ORDER BY
+  pr.code
+  ,s.name DESC;
+
+※areasテーブルの内容の表示は行わないが九州で絞り込む必要があるため結合している

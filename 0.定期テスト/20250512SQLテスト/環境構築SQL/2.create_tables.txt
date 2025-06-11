@@ -1,0 +1,163 @@
+DROP SEQUENCE IF EXISTS population_id_seq CASCADE;
+
+CREATE SEQUENCE population_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE population_id_seq
+  OWNER TO postgres;
+
+-- Table: categories
+
+DROP TABLE IF EXISTS categories CASCADE;
+
+CREATE TABLE categories
+(
+  id integer NOT NULL,
+  name text NOT NULL,
+  CONSTRAINT categories_pkey PRIMARY KEY (id )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE categories
+  OWNER TO postgres;
+
+-- Table: items
+
+DROP TABLE IF EXISTS items;
+
+CREATE TABLE items
+(
+  id integer NOT NULL,
+  category_id integer NOT NULL,
+  name text NOT NULL,
+  price integer NOT NULL,
+  CONSTRAINT items_pkey PRIMARY KEY (id ),
+  CONSTRAINT item_category_fkey FOREIGN KEY (category_id)
+      REFERENCES categories (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE items
+  OWNER TO postgres;
+
+-- Table: employees
+
+DROP TABLE IF EXISTS employees;
+
+CREATE TABLE employees
+(
+  id serial NOT NULL,
+  name text NOT NULL,
+  email text NOT NULL,
+  start_date date NOT NULL,
+  end_date date,
+  CONSTRAINT employees_pkey PRIMARY KEY (id )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE employees
+  OWNER TO postgres;
+
+-- Table: areas
+
+DROP TABLE IF EXISTS areas CASCADE;
+
+CREATE TABLE areas
+(
+  code character varying(2) NOT NULL,
+  name text,
+  CONSTRAINT areas_pkey PRIMARY KEY (code )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE areas
+  OWNER TO postgres;
+
+-- Table: prefectures
+
+DROP TABLE IF EXISTS prefectures CASCADE;
+
+CREATE TABLE prefectures
+(
+  code character varying(2) NOT NULL,
+  area_code character varying(2),
+  name text NOT NULL,
+  acreage double precision,
+  CONSTRAINT prefectures_pkey PRIMARY KEY (code ),
+  CONSTRAINT prefectures_areas_fkey FOREIGN KEY (area_code)
+      REFERENCES areas (code) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE prefectures
+  OWNER TO postgres;
+
+-- Table: sexes
+
+DROP TABLE IF EXISTS sexes CASCADE;
+
+CREATE TABLE sexes
+(
+  code character(1) NOT NULL,
+  name character varying(1),
+  CONSTRAINT gender_pkey PRIMARY KEY (code )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE sexes
+  OWNER TO postgres;
+
+-- Table: age_ranges
+
+DROP TABLE IF EXISTS age_ranges CASCADE;
+
+CREATE TABLE age_ranges
+(
+  code character(1) NOT NULL,
+  label text,
+  CONSTRAINT age_range_pkey PRIMARY KEY (code )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE age_ranges
+  OWNER TO postgres;
+
+-- Table: populations
+
+DROP TABLE IF EXISTS populations;
+
+CREATE TABLE populations
+(
+  id integer NOT NULL DEFAULT nextval('population_id_seq'::regclass),
+  prefecture_code character(2),
+  age_range_code character(1),
+  sex_code character(1),
+  population integer,
+  CONSTRAINT population_pkey PRIMARY KEY (id ),
+  CONSTRAINT populations_age_ranges_fkey FOREIGN KEY (age_range_code)
+      REFERENCES age_ranges (code) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT populations_prefectures_fkey FOREIGN KEY (prefecture_code)
+      REFERENCES prefectures (code) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT populations_sexes_fkey FOREIGN KEY (sex_code)
+      REFERENCES sexes (code) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE populations
+  OWNER TO postgres;

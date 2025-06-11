@@ -1,0 +1,4 @@
+SELECT
+ SUM(population) AS population 
+FROM
+ populations;

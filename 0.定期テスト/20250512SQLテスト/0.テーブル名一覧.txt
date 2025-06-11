@@ -1,0 +1,8 @@
+分類テーブル：categories
+商品テーブル：items
+従業員テーブル：employees
+地域テーブル：areas
+都道府県テーブル：prefectures
+性別テーブル：sexes
+年代テーブル：age_ranges
+人口テーブル：populations

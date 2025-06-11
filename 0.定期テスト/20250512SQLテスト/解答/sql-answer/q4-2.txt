@@ -1,0 +1,73 @@
+以下は、歯抜けが２つ続いた場合は対応できませんが、OKとします。
+
+SELECT
+ CASE
+   WHEN
+    NOT EXISTS(select id from items where id = 1)
+   THEN
+    1
+   ELSE
+    MIN(id + 1)
+ END AS absence
+FROM
+ items
+where
+ (id +1) not in (select id from items);
+
+
+
+解説
+副問い合わせ
+select id from items
+の結果は以下の通り
+(⭐︎1)
+ id
+----
+  1
+  2
+  4
+  5
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+※3と6が歯抜けになっていることがわかる
+
+where区の(id+1)は以下と同じ意味
+※上記の結果+1
+(⭐︎2)
+ id
+----
+  2
+  3
+  5
+  6
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+※(⭐︎1)には存在せず(⭐︎2)に存在するidは3,6,15
+
+SELECT
+ *
+FROM
+ items
+where
+ (id +1) not in (select id from items);
+
+を試すと、以下の通りになる
+ id | category_id | name | price
+----+-------------+------+-------
+  2 |           1 | 鯛   |   800
+  5 |           2 | 牛   |  1200
+ 14 |           2 | 羊   |   650
+
+最小値の2に+1したものが歯抜けなので、解答例のようなSQLになる

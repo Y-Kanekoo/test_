@@ -1,0 +1,15 @@
+SELECT
+   a.name AS area
+  ,p.name AS prefecture
+FROM
+ prefectures p
+INNER JOIN
+ areas a 
+ON
+ p.area_code = a.code
+WHERE
+ p.code != '00';
+
+※INNER JOINなので00のものは表示されないため
+　p.code != '00’がなくてもOK
+

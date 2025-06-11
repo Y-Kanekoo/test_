@@ -1,0 +1,4 @@
+UPDATE
+ items
+SET
+ price = price * 0.9;

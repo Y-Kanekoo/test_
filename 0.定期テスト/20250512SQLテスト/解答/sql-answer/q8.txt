@@ -1,0 +1,24 @@
+SELECT
+  a.name AS area
+ ,SUM(CASE WHEN p.sex_code = 'm' AND p.age_range_code = '1' THEN p.population ELSE 0 END) AS m_below_15
+ ,SUM(CASE WHEN p.sex_code = 'm' AND p.age_range_code = '2' THEN p.population ELSE 0 END) AS m_from_15_to_64
+ ,SUM(CASE WHEN p.sex_code = 'm' AND p.age_range_code = '3' THEN p.population ELSE 0 END) AS m_over_65
+ ,SUM(CASE WHEN p.sex_code = 'f' AND p.age_range_code = '1' THEN p.population ELSE 0 END) AS f_below_15
+ ,SUM(CASE WHEN p.sex_code = 'f' AND p.age_range_code = '2' THEN p.population ELSE 0 END) AS f_from_15_to_64
+ ,SUM(CASE WHEN p.sex_code = 'f' AND p.age_range_code = '3' THEN p.population ELSE 0 END) AS f_over_65
+FROM
+ populations p
+INNER JOIN
+ prefectures pr
+ON
+ p.prefecture_code = pr.code
+INNER JOIN
+ areas a
+ON
+ pr.area_code = a.code
+GROUP BY
+  a.code
+ORDER BY
+ a.code;
+
+※エリアコード別にグループ化した後、性別と年代コードで条件分岐し、人口の総計を計算している
